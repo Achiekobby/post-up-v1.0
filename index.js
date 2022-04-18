@@ -1,21 +1,9 @@
-const { ApolloServer, gql } = require("apollo-server");
+const { ApolloServer} = require("apollo-server");
 const mongoose = require("mongoose");
 
 require("dotenv").config();
-
-const typeDefs = gql`
-    # List all the queries that the clients can execute along with the return types
-    type Query {
-        sayHi: String!
-    }
-`;
-
-// Resolvers Defines the technique for fetching the types defined the schema.
-const resolvers = {
-    Query: {
-        sayHi: () => "hello graphql",
-    },
-};
+const resolvers = require("./Graphql/Resolvers/GeneralResolver")
+const typeDefs  = require("./Graphql/TypeDefs")
 
 //Creating an instance of the apollo server and connecting to the mongo db database
 const server = new ApolloServer({ typeDefs, resolvers });
@@ -26,7 +14,6 @@ main().catch((err) => console.log(err.message))
 .then((res)=>{
     console.log(`Server is running at: ${res.url}`);
 })
-
 
 // Method for connecting the app to the mongoDB database
 async function main() {
