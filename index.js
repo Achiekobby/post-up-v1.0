@@ -7,7 +7,7 @@ const typeDefs  = require("./Graphql/TypeDefs")
 
 //Creating an instance of the apollo server and connecting to the mongo db database
 const server = new ApolloServer({ typeDefs, resolvers });
-main().catch((err) => console.log(err.message))
+dbConnect().catch((err) => console.log(err.message))
 .then(()=>{
     return server.listen({port:5000})
 })
@@ -16,7 +16,7 @@ main().catch((err) => console.log(err.message))
 })
 
 // Method for connecting the app to the mongoDB database
-async function main() {
+async function dbConnect() {
     let url = process.env.MONGODB_URL
 
     let connect = await mongoose.connect(

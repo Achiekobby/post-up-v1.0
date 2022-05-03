@@ -1,7 +1,7 @@
 const {gql} = require('apollo-server')
 
 module.exports = gql`
-    #Query Definitions 
+    # //todo: Query Definitions 
     type Post{
         id:ID!,
         post_body:String!,
@@ -18,19 +18,19 @@ module.exports = gql`
         created_at:String!,
     }
 
-    # Mutations Definitions
+    # //todo:Mutations Definitions
     input RegisterInput{
         username:String!,
         password:String!,
         confirm_password:String!,
         email:String!,
     }
-    # List all the queries that the clients can execute along with the return types in relation to posts
+    # //todo:List all the queries that the clients can execute along with the return types in relation to app
     type Query {
         getPosts:[Post]
     }
 
-    # List of all mutations or changes to be made in the database in relation to the posts
+    # //todo: List of all mutations or changes to be made in the database in relation to the app
     type Mutation{
         register(registerInput:RegisterInput): User!
     }
