@@ -71,6 +71,34 @@ module.exports = {
                 throw new Error(error.message)
             }
             
+        },
+
+        //Todo: Adding likes to a post
+        likePost: async(_,{postId},context)=>{
+            //Tip: check if validated user
+            const {username} = checkAuth(context)
+
+            //*finding the post
+            const post = await Post.findById(postId)
+
+            if(post){
+                //Tip: whole idea of the following logic is to toggle the value of the like section of the post
+
+                if(post.likes.find(like=>like.username === username)){
+                    //!Post is already liked, unlike post
+                    post.likes = post.likes.filter(like=>like.username !== username)
+                }
+                else{
+                    //*Not liked, like post
+                    post.likes.unshift({
+                        username: username,
+                        created_at: new Date().toISOString()
+                    })
+                }
+                await post.save()
+
+                return post
+            }else throw new UserInputError("Post not Found")
         }
 
     }
