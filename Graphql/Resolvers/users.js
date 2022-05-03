@@ -2,13 +2,55 @@ const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 const {UserInputError} = require("apollo-server")
 const {validateRegisterInput} = require('../../Middleware/Validators')
+const {loginValidator} = require('../../Middleware/LoginMiddleware')
 
 const User = require("../../Models/User")
 require('dotenv').config()
 
+//Todo: Token Generation method for login and register
+function generateToken(user){
+    const token = jwt.sign({
+        id:user.id,
+        email:user.email,
+        username: user.username
+    }, process.env.SECRET_KEY,{expiresIn:"1h"})
+
+    return token
+}
 
 module.exports = {
     Mutation:{
+        //!LOGIN A USER
+        async login(_,{username, password}) {
+            const {errors, valid} = loginValidator(username, password)
+
+            if(valid===false){
+                throw new UserInputError("Errors", {errors})
+            }
+            const user = await User.findOne({username})
+
+            if(!user){
+                errors.general = "User not found"
+                throw new UserInputError("User not found", {errors});
+            }
+
+            const password_match = await bcrypt.compare(password, user.password)
+            if(!password_match){
+                errors.general = "Wrong Credentials"
+                throw new UserInputError("Wrong Credentials", {errors});
+            }
+            const token = generateToken(user)
+
+            return {
+                ...user._doc,
+                id:user.id,
+                token
+
+            }
+        },
+
+
+        //!REGISTER A NEW USER
         async register(_, {registerInput:{username, email, password, confirm_password}}){
             /**
              * TODO: Validate user data
@@ -46,11 +88,7 @@ module.exports = {
             const result = await newUser.save()
 
             //!Making a registration token
-            const token = jwt.sign({
-                id:result.id,
-                email:result.email,
-                username: result.username
-            }, process.env.SECRET_KEY,{expiresIn:"1h"})
+            const token = generateToken(result)
 
             return{
                 ...result._doc,

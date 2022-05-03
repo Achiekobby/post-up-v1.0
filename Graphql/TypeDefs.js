@@ -33,5 +33,6 @@ module.exports = gql`
     # //todo: List of all mutations or changes to be made in the database in relation to the app
     type Mutation{
         register(registerInput:RegisterInput): User!
+        login(username:String!, password:String!):User!
     }
 `;
