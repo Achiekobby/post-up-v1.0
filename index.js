@@ -5,8 +5,8 @@ require("dotenv").config();
 const resolvers = require("./Graphql/Resolvers/GeneralResolver")
 const typeDefs  = require("./Graphql/TypeDefs")
 
-//Creating an instance of the apollo server and connecting to the mongo db database
-const server = new ApolloServer({ typeDefs, resolvers });
+//*Creating an instance of the apollo server and connecting to the mongo db database
+const server = new ApolloServer({ typeDefs, resolvers, context:({req})=>({req}) });
 dbConnect().catch((err) => console.log(err.message))
 .then(()=>{
     return server.listen({port:5000})
@@ -15,7 +15,7 @@ dbConnect().catch((err) => console.log(err.message))
     console.log(`Server is running at: ${res.url}`);
 })
 
-// Method for connecting the app to the mongoDB database
+//* Method for connecting the app to the mongoDB database
 async function dbConnect() {
     let url = process.env.MONGODB_URL
 

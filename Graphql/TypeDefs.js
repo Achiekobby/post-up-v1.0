@@ -28,11 +28,14 @@ module.exports = gql`
     # //todo:List all the queries that the clients can execute along with the return types in relation to app
     type Query {
         getPosts:[Post]
+        getPost(postId:ID!):Post
     }
 
     # //todo: List of all mutations or changes to be made in the database in relation to the app
     type Mutation{
         register(registerInput:RegisterInput): User!
         login(username:String!, password:String!):User!
+        createPost(post_body:String!):Post!
+        deletePost(postId:ID!):String
     }
 `;

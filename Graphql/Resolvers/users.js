@@ -86,8 +86,6 @@ module.exports = {
             })
 
             const result = await newUser.save()
-
-            //!Making a registration token
             const token = generateToken(result)
 
             return{
