@@ -39,6 +39,10 @@ module.exports = {
             const validUser = checkAuth(context)
             // console.log(validUser);
 
+            if(args.post_body.trim()===""){
+                throw new Error('Post body must not be empty')
+            }
+
             //* Creating a new Post
             const newPost = new Post({
                 post_body,
