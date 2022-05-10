@@ -1,12 +1,13 @@
 const { ApolloServer} = require("apollo-server");
 const mongoose = require("mongoose");
-
+const { PubSub }  =  require('graphql-subscriptions');
 require("dotenv").config();
 const resolvers = require("./Graphql/Resolvers/GeneralResolver")
 const typeDefs  = require("./Graphql/TypeDefs")
 
+const pubsub = new PubSub()
 //*Creating an instance of the apollo server and connecting to the mongo db database
-const server = new ApolloServer({ typeDefs, resolvers, context:({req})=>({req}) });
+const server = new ApolloServer({ typeDefs, resolvers, context:({req})=>({req, pubsub}) });
 dbConnect().catch((err) => console.log(err.message))
 .then(()=>{
     return server.listen({port:5000})

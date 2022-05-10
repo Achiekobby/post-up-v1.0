@@ -1,6 +1,9 @@
 const Post = require("../../Models/Post")
 const checkAuth = require("../../Middleware/CheckAuth")
 const {AuthenticationError} = require('apollo-server')
+
+
+// const pubsub  = new PubSub()
 module.exports = {
     // Query Methods Definitions in reference to posts
     Query: {
@@ -44,6 +47,10 @@ module.exports = {
                 created_at: new Date().toISOString()
             })
             const post = await newPost.save()
+
+            context.pubsub.publish('NEW POST',{
+                newPost: post
+            })
             return post
         },
 
@@ -101,5 +108,12 @@ module.exports = {
             }else throw new UserInputError("Post not Found")
         }
 
+    },
+
+    Subscription:{
+        newPost:{
+            subscribe:(_,__,{pubsub})=>{ pubsub.asyncIterator('NEW POST') }
+        }
     }
+
 }
